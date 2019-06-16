@@ -4,7 +4,7 @@ import defusedxml.ElementTree as ET
 import yaml
 import dbm
 import contextlib
-
+import importlib
 import mimetypes
 import codecs
 from docutils import nodes
@@ -143,6 +143,12 @@ class DataTemplateDBM(DataTemplateBase):
     def _load_data_cm(self, resolved_path):
         return dbm.open(resolved_path, "r")
 
+class DataTemplateImportModule(DataTemplateBase):
+    def _resolve_source_path(self, env, data_source):
+        return data_source
+
+    def _load_data(self, resolved_path):
+        return importlib.import_module(resolved_path)
 
 def _handle_dialect_option(argument):
     return rst.directives.choice(argument, ["auto"] + csv.list_dialects())
